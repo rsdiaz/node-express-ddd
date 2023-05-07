@@ -13,4 +13,14 @@ export class UserService {
 
     return user
   }
+
+  async findById(id: string): Promise<User> {
+    const user = await this.userRepository.findById(id)
+
+    if (!user) {
+      throw new Error(`User ${id} not found`)
+    }
+
+    return user
+  }
 }
