@@ -28,4 +28,10 @@ export class UserRepositoryMongo implements UserRepository {
       ? new User(userDocument._id, userDocument.email, userDocument.password)
       : null
   }
+
+  async findById(id: string): Promise<User | null> {
+    const user = await UserModel.findById(id)
+
+    return user ? new User(user._id, user.email, user.password) : null
+  }
 }

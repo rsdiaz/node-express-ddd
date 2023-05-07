@@ -1,14 +1,11 @@
 import mongoose from 'mongoose'
 import env from '../../../env'
 
-class MongoConnection {
+export class MongoConnection {
+  private static instance: MongoConnection
   conn: any
 
-  constructor() {
-    this.conn = false
-  }
-
-  async connect() {
+  public async connect() {
     try {
       const MONGODB_CONNECTION_STRING = env.MONGO_URI
       this.conn = await mongoose.connect(MONGODB_CONNECTION_STRING)
@@ -18,8 +15,12 @@ class MongoConnection {
       process.exit(1)
     }
   }
+
+  static getInstance(): MongoConnection {
+    if(!MongoConnection.instance) {
+      MongoConnection.instance = new MongoConnection()
+    }
+
+    return MongoConnection.instance
+  }
 }
-
-const instance = new MongoConnection()
-
-export default instance

@@ -1,11 +1,11 @@
-import MongoDB from './infrastructure/persistence/mongo/mongo_connection'
+import { MongoConnection } from './infrastructure/persistence/mongo/mongo_connection'
 import express, { Express } from 'express'
 import app from './app'
 import env from './env'
 import { AddressInfo } from 'net'
 class Server {
   app: Express
-  mongoDB: any
+  mongoDB: MongoConnection
   server: import('http').Server<
     typeof import('http').IncomingMessage,
     typeof import('http').ServerResponse
@@ -13,13 +13,13 @@ class Server {
 
   constructor() {
     this.app = express()
-    this.mongoDB = null
+    this.mongoDB = MongoConnection.getInstance()
   }
 
   async start() {
     app(this.app)
 
-    this.mongoDB = await MongoDB.connect()
+    await this.mongoDB.connect()
 
     this.server = this.app.listen(env.PORT, () => {
       const addressInfo = this.server.address() as AddressInfo
